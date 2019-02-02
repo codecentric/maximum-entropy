@@ -1,8 +1,7 @@
-from ts_code import ts_helpers as tsh
+from code import ts_helpers as tsh
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from matplotlib import pyplot as plt
 
 z = pd.read_csv('/Users/dominikballreich/PycharmProjects/max_ent/data/AirPassengers.csv')
 y = np.matrix(z['#Passengers'])
