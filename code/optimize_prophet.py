@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import maximum_entropy as me
 
-y = pd.read_csv('/Users/dominikballreich/PycharmProjects/max_ent/data/AirPassengers.csv')
+y = pd.read_csv('/Users/dominikballreich/PycharmProjects/maximum_entropy/data/AirPassengers.csv')
 y.columns = ['ds', 'y']
 
 
@@ -32,7 +32,7 @@ prior_samples = pred_samples_df.iloc[138, :]
 
 rules = [['-inf', 548, 0.01], [590,'inf', 0.75]]
 points, weights, prior, max_ent_dist = me.opt_max_ent(rules, prior_samples)
-plt.plot(points, prior, label='$\widetilde{p_{0}}(y)$')
+plt.plot(points, prior, label='$\widehat{p_{0}}(y)$')
 #plt.plot(points, max_ent_dist)
 plt.xlabel('Number of Passengers')
 plt.ylabel('Density')
