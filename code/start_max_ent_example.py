@@ -109,7 +109,6 @@ labels = [59, 60]
 xt = np.arange(120, 133, 12)
 plt.plot(y_p, c='b', label='Original')
 plt.plot(forcast_p, c='c', label='FB Prophet Forecasts')
-#plt.plot(forecast_new_p, c='m', label='Maximum Entropy Forecasts')
 locs, labs = plt.xticks()
 plt.xticks(xt, labels)
 plt.xlabel('Year')
