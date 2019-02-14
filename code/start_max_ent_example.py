@@ -8,6 +8,8 @@ import maximum_entropy_helpers as me
 y = pd.read_csv('/Users/dominikballreich/PycharmProjects/maximum_entropy/data/AirPassengers.csv')
 y.columns = ['ds', 'y']
 
+may_1960_index = 136
+july_1960_index = 138
 
 # Plot the timeseries and mark the test period
 labels = np.arange(49,61)
@@ -22,7 +24,6 @@ print("Close plot")
 plt.show()
 
 
-
 # Generate forecasts for 1960 by using Facebook Prophet.
 y_train = y.iloc[0:132, :]
 y_test = y.iloc[132:, :]
@@ -32,13 +33,13 @@ future = m.make_future_dataframe(periods=y_test.shape[0], freq='MS')
 forecast = m.predict(future)
 
 # Calculate the RMSE for the Facebook Prophet forecast for May and July 1960
-RMSE_May_July_FBP = np.sqrt(np.mean(np.square(forecast['yhat'][136]-y['y'][136])+np.square(forecast['yhat'][138]-y['y'][138])))
+RMSE_May_July_FBP = np.sqrt(np.mean(np.square(forecast['yhat'][may_1960_index]-y['y'][may_1960_index])+np.square(forecast['yhat'][july_1960_index]-y['y'][july_1960_index])))
 print("The Facebbook Prophet RMSE for May/July 1960 is:", RMSE_May_July_FBP)
 
 # Extract the samples from the posterior predictive distribution for May 1960
 pred_samples = m.predictive_samples(future)
 pred_samples_df = pd.DataFrame(pred_samples['yhat'])
-prior_samples = pred_samples_df.iloc[136, :]
+prior_samples = pred_samples_df.iloc[may_1960_index, :]
 
 
 # Define the constraints for May 1960
@@ -60,17 +61,16 @@ print("Close plot")
 plt.show()
 
 
-
 # Calculate the Maximum Entropy forecast for May 1960
 prediction = np.sum(points * max_ent_dist * weights)
 forecast_new = forecast['yhat'].copy()
-forecast_new.iloc[136] = prediction
+forecast_new.iloc[may_1960_index] = prediction
 
 
 # Extract the samples from the posterior predictive distribution for July 1960
 pred_samples = m.predictive_samples(future)
 pred_samples_df = pd.DataFrame(pred_samples['yhat'])
-prior_samples = pred_samples_df.iloc[138, :]
+prior_samples = pred_samples_df.iloc[july_1960_index, :]
 
 
 # Define the constraints for July 1960
@@ -94,10 +94,10 @@ plt.show()
 
 # Calculate the Maximum Entropy forecast for July 1960
 prediction = np.sum(points * max_ent_dist * weights)
-forecast_new.iloc[138] = prediction
+forecast_new.iloc[july_1960_index] = prediction
 
 # Calculate the RMSE for the Maximum Entropy forecast for May and July 1960
-RMSE_May_July_Max_Ent = np.sqrt(np.mean(np.square(forecast_new[136]-y['y'][136])+np.square(forecast_new[138]-y['y'][138])))
+RMSE_May_July_Max_Ent = np.sqrt(np.mean(np.square(forecast_new[may_1960_index]-y['y'][may_1960_index])+np.square(forecast_new[july_1960_index]-y['y'][july_1960_index])))
 print("The Maximium Entropy RMSE for May/July 1960 is:", RMSE_May_July_Max_Ent)
 
 # Plot the forecasts
@@ -114,12 +114,12 @@ plt.xticks(xt, labels)
 plt.xlabel('Year')
 plt.ylabel('Number of Passengers')
 plt.axvline(x=131, c='k', linestyle='dashed', linewidth=0.5)
-plt.plot(136, forecast['yhat'][136], 'ro', fillstyle='none', color='c')
-plt.plot(138, forecast['yhat'][138], 'ro', fillstyle='none', color='c')
-plt.plot(136, forecast_new.iloc[136], 'x', fillstyle='none', color='r', label='Maximum Entropy Forecasts')
-plt.plot(138, forecast_new.iloc[138], 'x', fillstyle='none', color='r')
-plt.annotate(s='', xy=(136, forecast_new.iloc[136]), xytext=(136, forecast['yhat'][136]), arrowprops=dict(arrowstyle='simple',color='g'))
-plt.annotate(s='', xy=(138, forecast_new.iloc[138]), xytext=(138, forecast['yhat'][138]), arrowprops=dict(arrowstyle='simple',color='g'))
+plt.plot(may_1960_index, forecast['yhat'][may_1960_index], 'ro', fillstyle='none', color='c')
+plt.plot(july_1960_index, forecast['yhat'][july_1960_index], 'ro', fillstyle='none', color='c')
+plt.plot(may_1960_index, forecast_new.iloc[may_1960_index], 'x', fillstyle='none', color='r', label='Maximum Entropy Forecasts')
+plt.plot(july_1960_index, forecast_new.iloc[july_1960_index], 'x', fillstyle='none', color='r')
+plt.annotate(s='', xy=(may_1960_index, forecast_new.iloc[may_1960_index]), xytext=(may_1960_index, forecast['yhat'][may_1960_index]), arrowprops=dict(arrowstyle='simple',color='g'))
+plt.annotate(s='', xy=(july_1960_index, forecast_new.iloc[july_1960_index]), xytext=(july_1960_index, forecast['yhat'][july_1960_index]), arrowprops=dict(arrowstyle='simple',color='g'))
 plt.legend()
 plt.show()
 

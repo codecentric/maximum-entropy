@@ -52,7 +52,7 @@ def max_ent_estimate(l,*args):
     return np.sum(np.abs(results))
 
 
-def get_max_ent_dist(l,points, weights, prior, rules):
+def get_final_max_ent_dist(l,points, weights, prior, rules):
     indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constarint(l, points, weights, prior, rules)
     max_ent_dist = (prior * np.exp(constraint)) * 1 / normalization
 
@@ -71,7 +71,7 @@ def opt_max_ent(rules,prior_samples):
     arguments = (points, weights, prior, rules)
     l, fopt = pso(max_ent_estimate, lb, ub, args=arguments, debug=True, phip=0.5, phig=0.5, omega=0.5,
                            minfunc=1e-12, minstep=0.001, maxiter=100, swarmsize=600)
-    max_ent_dist = get_max_ent_dist(l, points, weights, prior, rules)
+    max_ent_dist = get_final_max_ent_dist(l, points, weights, prior, rules)
 
     return points, weights, prior, max_ent_dist
 
