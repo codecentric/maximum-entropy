@@ -4,6 +4,7 @@ import statsmodels.api as sm
 
 
 def get_indicator_normalization_constant_constarint(l, points, weights, prior, rules):
+    # The constraints are calculated
     constraint = 0
     indicator_single_rule = []
     for i in range(0, len(rules)):
@@ -28,6 +29,7 @@ def get_indicator_normalization_constant_constarint(l, points, weights, prior, r
 
 
 def riemann_int(number_of_points, boundary):
+    # Produces points and weights (deltas) on a predefined grid
     weight = (boundary[1]-boundary[0])/(number_of_points-1)
     points = np.arange(boundary[0], boundary[1], weight)
     points = np.append(points, boundary[1])
@@ -36,11 +38,13 @@ def riemann_int(number_of_points, boundary):
     return points, weights
 
 
-def max_ent_estimate(l,*args):
+def max_ent_estimate(l, *args):
+    # Optimization of the Maximum Entropy functional with respect to the lambdas
     points = args[0]
     weights = args[1]
     prior = args[2]
     rules = args[3]
+    # Get the constraints
     indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constarint(l, points, weights, prior, rules)
 
     results = []
@@ -52,7 +56,8 @@ def max_ent_estimate(l,*args):
     return np.sum(np.abs(results))
 
 
-def get_final_max_ent_dist(l,points, weights, prior, rules):
+def get_final_max_ent_dist(l, points, weights, prior, rules):
+    # Produces the final maximum Entropy density
     indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constarint(l, points, weights, prior, rules)
     max_ent_dist = (prior * np.exp(constraint)) * 1 / normalization
 
@@ -62,9 +67,12 @@ def get_final_max_ent_dist(l,points, weights, prior, rules):
 def opt_max_ent(rules,prior_samples):
     kde = sm.nonparametric.KDEUnivariate(np.transpose(np.matrix(prior_samples)))
     kde.fit()
+    # The densities are discretized on a grid using 10000 points
     points, weights = riemann_int(10000, [np.min(prior_samples), np.max(prior_samples)])
     prior = kde.evaluate(points)
     prior = prior/sum(prior*weights)
+    # By trial and error it has been shown that the lambdas are in a range of [-20,20].
+    # Therefore these limits are chosen for the parameters.
     lb = np.ones(len(rules))*-20
     ub = np.ones(len(rules))*20
 
