@@ -71,7 +71,7 @@ def opt_max_ent(rules,prior_samples):
     points, weights = riemann_int(10000, [np.min(prior_samples), np.max(prior_samples)])
     prior = kde.evaluate(points)
     prior = prior/sum(prior*weights)
-    # By trial and error it has been shown that the lambdas are in a range of [-20,20].
+    # By trial and error it has been shown a range of [-20,20] is more than sufficient for the lambdas.
     # Therefore these limits are chosen for the parameters.
     lb = np.ones(len(rules))*-20
     ub = np.ones(len(rules))*20
