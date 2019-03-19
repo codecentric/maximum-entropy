@@ -1,3 +1,5 @@
 .DS_Store
 .idea/
 max_ent/
+__pycache__/
+*.pyc
