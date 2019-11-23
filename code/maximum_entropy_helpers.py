@@ -3,7 +3,7 @@ from pyswarm import pso
 import statsmodels.api as sm
 
 
-def get_indicator_normalization_constant_constarint(l, points, weights, prior, rules):
+def get_indicator_normalization_constant_constraint(l, points, weights, prior, rules):
     # The constraints are calculated
     constraint = 0
     indicator_single_rule = []
@@ -45,7 +45,7 @@ def max_ent_estimate(l, *args):
     prior = args[2]
     rules = args[3]
     # Get the constraints
-    indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constarint(l, points, weights, prior, rules)
+    indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constraint(l, points, weights, prior, rules)
 
     results = []
     for i in range(0, len(rules)):
@@ -58,13 +58,13 @@ def max_ent_estimate(l, *args):
 
 def get_final_max_ent_dist(l, points, weights, prior, rules):
     # Produces the final maximum Entropy density
-    indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constarint(l, points, weights, prior, rules)
+    indicator_single_rule, normalization, constraint = get_indicator_normalization_constant_constraint(l, points, weights, prior, rules)
     max_ent_dist = (prior * np.exp(constraint)) * 1 / normalization
 
     return max_ent_dist
 
 
-def opt_max_ent(rules,prior_samples):
+def opt_max_ent(rules, prior_samples):
     kde = sm.nonparametric.KDEUnivariate(np.transpose(np.matrix(prior_samples)))
     kde.fit()
     # The densities are discretized on a grid using 10000 points
@@ -80,8 +80,12 @@ def opt_max_ent(rules,prior_samples):
     l, fopt = pso(max_ent_estimate, lb, ub, args=arguments, debug=True, phip=0.5, phig=0.5, omega=0.5,
                            minfunc=1e-12, minstep=0.001, maxiter=100, swarmsize=600)
     max_ent_dist = get_final_max_ent_dist(l, points, weights, prior, rules)
-
     return points, weights, prior, max_ent_dist
+
+
+def sum_test(a, b):
+    erg = a+b
+    return erg
 
 
 
