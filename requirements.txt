@@ -7,7 +7,7 @@ holidays==0.9.9
 kiwisolver==1.0.1
 lunardate==0.2.0
 matplotlib==3.0.2
-numpy==1.16.0
+numpy==1.22.0
 pandas==0.24.0
 patsy==0.5.1
 pyparsing==2.3.1
