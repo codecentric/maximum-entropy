@@ -16,7 +16,7 @@ pyswarm==0.6
 python-dateutil==2.7.5
 pytz==2018.9
 scikit-learn==0.20.2
-scipy==1.2.0
+scipy==1.10.0
 setuptools-git==1.2
 six==1.12.0
 sklearn==0.0
